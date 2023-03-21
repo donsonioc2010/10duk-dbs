@@ -1,0 +1,30 @@
+# DBDocs 자동배포 Job
+
+name: DBDOCS_BUILD
+
+on:
+  push:
+    branches: ["main", "develop"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # DBDocs Install
+      - name: Install dbdocs
+        run: sudo npm install -g dbdocs
+
+      #DBDocs Install Check
+      - name: Check dbdocs
+        run: dbdocs
+
+      # Runs a set of commands using the runners shell
+      - name: Update dbdocs project
+
+        env:
+          DBDOCS_TOKEN: ${{ secrets.DBDOCS_TOKEN }}
+
+        run: dbdocs build ./dbdocs/10duk_dbs.dbml --project=${{ secrets.DBDOCS_PROJECT }}
