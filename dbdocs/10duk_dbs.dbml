@@ -6,6 +6,101 @@ Project 10duk_dbs {
   '''
 }
 
+// 사용자 회원가입 종류
+Enum auth.provider_type {
+  DEFAULT [note: '사이트를 통한 회원가입']
+  GOOGLE  [note: '구글']
+  GITHUB  [note: '깃허브']
+  APPLE   [note: '애플']
+  KAKAO   [note: '카카오']
+  NAVER   [note: '네이버']
+}
+
+// 사용자 상태
+Enum auth.auth_status {
+  WAITING [note: '메일 인증 대기']
+  ACTIVE  [note: '계정 활성화 상태']
+  DELETED [note: '자발적 탈퇴']
+  LOCKED  [note: '계정 잠금']
+  BLOCKED [note: '영구 정지' ]
+}
+
+// 사용자 권한
+Enum auth.role {
+  USER  [note: '사용자']
+  ADMIN [note: '관리자']
+}
+
+Table auth.users [headercolor: #EB801B, note: '
+  사용자 계정 정보 테이블
+  provider_type의 경우 일단 DEFAULT (회원가입 방식)으로만 생각하는걸로..
+'] {
+  id bigint [pk, not null, increment]
+  user_name varchar [not null, note: '
+    사용자 ID, E-mail형식으로 받는다.
+  ']
+  password varchar [not null, note: '사용자 password']
+  provider_type auth.provider_type [not null, default: 'DEFAULT', note: '사용자 회원가입 방식']
+  nickname varchar [not null, unique, note: '
+    닉네임
+    회원가입시 임의로 기록해주고 직접 수정하게 함.
+  ']
+  is_terms_agree tinyint [default: 0, note: '
+    약관동의 여부, 추후 OAuth를 통한 회원가입 제작시, OAuth가입은 기본 True설정
+    0 (False) : 미동의
+    1 (True) : 동의
+  ']
+  terms_agree_at datetime [note: '약관 동의 시간']
+  is_email_confirm tinyint [default: 0, note: '
+    이메일 인증 여부
+    0 (False) : 미인증
+    1 (True) : 인증
+  ']
+  user_status auth.auth_status [default: 'WAITING', note: '
+    현재 사용자 계정 상태
+  ']
+  login_at datetime [default: 'now()',  note: '마지막 로그인 시간']
+  create_at datetime [default: 'now()',  note: '계정 생성일']
+  update_at datetime [default: 'now()',  note: '계정 최종 수정일']
+  update_user bigint [not null, note: '관리자가 수정할 수도 있기 떄문에 추가함']
+
+  Indexes {
+    user_name [name: 'users_idx_user_name', note: '
+      회원 누적시 로그인 및 계정을 찾음에 있어서 사용자 메일계정 순으로 되있는 경우 조회가 수월할 것으로 예상.
+    ']
+    user_status [name: 'users_idx_user_status', note:'
+      상태별로 사용자 조회 필요하다 판단하여 index 설정
+    ']
+    id [unique]
+    nickname [unique]
+  }
+}
+
+Table auth.users_email_confirm[headercolor: #EB801B, note: '
+  사용자 메일 인증 테이블,
+  사용자 인증을 진행하거나, 일정시간이 지나면 해당 테이블 정보는 삭제한다.
+'] {
+  id bigint [pk, not null, increment]
+  user_id bigint [unique, ref: - auth.users.id, note: '사용자 ID']
+  uuid UUID [unique, not null, note: '사용자 인증 UUID']
+  create_at datetime [not null, note: 'UUID 생성 시간']
+
+  Indexes {
+    user_id [name: 'users_email_confirm_idx_user_id', note: 'user_id기반으로 기록해야 효율이 좋을 것으로 예상됨.']
+    uuid [unique]
+  }
+}
+
+Table auth.users_role [headercolor: #EB801B, note: '
+  사용자 인증 권한 테이블,
+  추후 리스트로 보유하는것까지 고려하여..
+'] {
+  id bigint [pk, not null, increment]
+  user_id bigint [ref: > auth.users.id, note:'사용자 ID']
+  role auth.role [not null, note: '권한 명']
+}
+
+
 
 //// -- LEVEL 1
 //// -- Schemas, Tables and References
