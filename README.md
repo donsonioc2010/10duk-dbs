@@ -18,7 +18,7 @@
   - `Security` + `JWT`
   - `JPA` + `querydsl`
   - `Actuator`
-  - `cloud(AWS)`
+  - `cloud(NCP)
   - `Mail` + `thymeleaf` + `common-io`
   - `mariadb-connector`
   - `redis`
@@ -50,7 +50,7 @@
 
 ### ETC
 - **CodeStyle**
-  - Google Java Style Code - Gradle에서 설정예정.
+  - Naver의 CheckStyle 활용 예정, `{root}/config/checkstyle` 하위의 설정파일을 Gradle에서 설정예정.
 - Project-Structure
   - multi-module 방식으로 진행해볼 예정
 
