@@ -1,1 +1,5 @@
 rootProject.name = '_10duk-dbs'
+
+include 'core'
+include('app')
+include 'infra'
