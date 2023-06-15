@@ -1,24 +1,80 @@
+// Gradle이 빌드 되기전에 실행하는 설정
+buildscript {
+    ext {
+        springBootVersion = '3.1.0'
+        dependencyManagement = '1.1.0'
+    }
+    // 저장소의 설정가능
+    repositories {
+        mavenCentral()
+        // jcenter()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyManagement}"
+    }
+}
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.0'
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
-group = 'com._10duk-dbs'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
-repositories {
-    mavenCentral()
+// 현재의 root프로젝트 및 추가될 서브 모듈의 설정, Maven사용
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'checkstyle'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com._10duk-dbs'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+
+    // 프로젝트 공통 체크스타일 설정
+    checkstyle {
+        // compileJava.options.encoding = 'UTF-8'
+        // compileTestJava.options.encoding = 'UTF-8'
+        configFile = file("${project.rootDir}/config/checkstyle/naver-checkstyle-rules.xml")
+        configProperties = ["suppressionFile": "${project.rootDir}/config/checkstyle/naver-checkstyle-suppressions.xml"]
+        ignoreFailures = false // 경고가 존재하는 경우 빌드를 계속 진행할 수 있는지 여부
+        toolVersion = '10.3.3'
+        maxErrors = 0
+        maxWarnings = 0 // 규칙이 어긋나는 코드가 하나라도 있을 경우 빌드 fail을 내게 된다.
+        sourceSets = [sourceSets.main] // CompileQuerydsl 오류 해결
+    }
+
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+    }
+    configurations {
+        complieOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
 
 
