@@ -1,13 +1,13 @@
-package com._10duk_dbs.core;
+package com._10duk_dbs.domain;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CoreApplication {
+public class DomainApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CoreApplication.class, args);
+		SpringApplication.run(DomainApplication.class, args);
 	}
 
 }

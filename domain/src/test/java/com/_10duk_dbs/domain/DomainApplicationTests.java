@@ -1,10 +1,10 @@
-package com._10duk_dbs.core;
+package com._10duk_dbs.domain;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CoreApplicationTests {
+class DomainApplicationTests {
 
 	@Test
 	void contextLoads() {

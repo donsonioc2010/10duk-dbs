@@ -1,5 +1,14 @@
+bootJar { enabled = false }
+jar { enabled = true }
+
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
+    api('com.fasterxml.jackson.datatype:jackson-datatype-jdk8')
+    api('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    api 'io.github.openfeign:feign-jackson:12.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+    api 'org.redisson:redisson:3.19.0'
+    api 'mysql:mysql-connector-java:8.0.32'
+    api project(':core')
 }

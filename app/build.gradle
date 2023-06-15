@@ -1,8 +1,9 @@
-plugins {
-    id 'java'
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
 
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation project(':core')
+    implementation project(':infra')
+    implementation project(':domain')
 }

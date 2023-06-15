@@ -1,20 +1,16 @@
 
 //bootJar의 경우에는 실행가능한 jar를 만들려 하기 때문에 main()이 필수임. 하지만 main()이 없는 모듈을 만들어야 할 경우 해당 옵션이 필요함
 // Core에서는 패키징을 하지 않게 설정한다.
-bootJar {
-    enabled = false
-}
-
-jar {
-    enabled = true
-}
+bootJar.enabled = false
+jar.enabled = true
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.10.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     api 'org.springframework.boot:spring-boot-starter-aop'
+    api 'org.springframework.boot:spring-boot-starter-security'
+    api 'org.springframework.boot:spring-boot-starter-validation'
 }
